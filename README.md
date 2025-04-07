@@ -62,22 +62,27 @@ To help you through the project, we recommend checking out:
 Install dependencies:
 
 bash
+
 Copier
+
 Modifier
+
 npm install
+
 Set up environment variables:
+
 Create a .env file in the root directory with the required MongoDB and Redis configurations.
 
-Start the server:
+**Start the server:**
 
 bash
 Copier
 Modifier
 npm start
-⚙️ Project Structure
-lua
-Copier
-Modifier
+
+## ⚙️ Project Structure
+
+```plaintext
 files_manager/
 ├── controllers/
 ├── middlewares/
@@ -89,7 +94,9 @@ files_manager/
 ├── babel.config.js
 ├── package.json
 └── README.md
-✅ Requirements
+```
+## ✅ Requirements
+
 ✅ Ubuntu 20.04 LTS
 
 ✅ Node.js v20.x.x
@@ -100,20 +107,12 @@ files_manager/
 
 ✅ Ends of files should contain a newline
 
-🧪 Testing
+## 🧪 Testing
 To run the tests:
-
+```
 bash
 Copier
 Modifier
 npm test
 Ensure you have MongoDB and Redis running locally before running tests.
-
-👥 Team
-This project is done in pairs.
-
-Guillaume, CTO at Holberton School (project author)
-
-You & Your Teammate – the development heroes!
-
-📄 License
+```
