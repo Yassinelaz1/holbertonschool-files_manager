@@ -1,5 +1,15 @@
 import redisClient from './utils/redis.mjs';
+import { strictEqual } from 'assert';
 import { createClient } from 'redis';
+
+describe('redisClient test', () => {
+    it('get of not existing key', async () => {
+      const value = await redisClient.get('myCheckerKey');
+      // Check that the value is null when the key does not exist
+      strictEqual(value, null);
+    });
+  });
+
 
 class RedisClient {
   constructor() {
@@ -25,10 +35,7 @@ class RedisClient {
   async get(key) {
     try {
       const value = await this.client.get(key); // Async get value
-      if (value === null) {
-        return null; // Explicitly return null when key does not exist
-      }
-      return value; // Return the value if the key exists
+      return value === null ? null : value;  // Return null if not found, otherwise return the value
     } catch (err) {
       console.error('Redis GET Error:', err);
       return null;  // Return null if there is an error
