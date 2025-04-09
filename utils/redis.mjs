@@ -1,68 +1,34 @@
-import redisClient from './utils/redis.mjs';
-import { strictEqual } from 'assert';
-import { createClient } from 'redis';
-
-describe('redisClient test', () => {
-    it('get of not existing key', async () => {
-      const value = await redisClient.get('myCheckerKey');
-      // Check that the value is null when the key does not exist
-      strictEqual(value, null);
-    });
-  });
-
+const redis = require('redis');
+const { promisify } = require('util');
 
 class RedisClient {
   constructor() {
-    this.client = createClient();
-    this.isConnected = false;
+    this.client = redis.createClient();
+    this.getAsync = promisify(this.client.get).bind(this.client);
 
-
-    this.client.on('error', (err) => {
-      console.error('Redis Client Error:', err);
-    });
-
-
-    this.client.on('connect', () => {
-      this.isConnected = true;
+    this.client.on('error', (error) => {
+      console.log(`Redis client not connected to the server: ${error}`);
     });
   }
 
-
   isAlive() {
-    return this.isConnected;
+    return this.client.connected;
   }
 
   async get(key) {
-    try {
-      const value = await this.client.get(key); // Async get value
-      return value === null ? null : value;  // Return null if not found, otherwise return the value
-    } catch (err) {
-      console.error('Redis GET Error:', err);
-      return null;  // Return null if there is an error
-    }
+    const value = await this.getAsync(key);
+    return value;
   }
-
 
   async set(key, value, duration) {
-    try {
-      await this.client.set(key, value, {
-        EX: duration,
-      });
-    } catch (err) {
-      console.error('Redis SET Error:', err);
-    }
+    this.client.set(key, value);
+    this.client.expire(key, duration);
   }
-
 
   async del(key) {
-    try {
-      await this.client.del(key);
-    } catch (err) {
-      console.error('Redis DEL Error:', err);
-    }
+    this.client.del(key);
   }
 }
-
 
 const redisClient = new RedisClient();
 export default redisClient;
