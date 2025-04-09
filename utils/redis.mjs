@@ -15,7 +15,15 @@ class RedisClient {
   isAlive() {
     return this.client.connected;
   }
-
+  async isAlive() {
+    try {
+      const response = await this.client.ping();
+      return response === 'PONG';
+    } catch (err) {
+      console.error('Redis PING failed:', err);
+      return false;
+    }
+  }
   async get(key) {
     return this.getAsync(key);
   }
