@@ -1,3 +1,4 @@
+import redisClient from './utils/redis.mjs';
 import { createClient } from 'redis';
 
 class RedisClient {
