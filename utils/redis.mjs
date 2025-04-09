@@ -16,7 +16,7 @@ class RedisClient {
     });
 
     // Connect to Redis (for redis@4.x)
-    this.client.connect(); 
+    this.client.connect();
   }
 
   // Check if Redis connection is alive
@@ -55,4 +55,6 @@ class RedisClient {
   }
 }
 
-// Export an instance of RedisClient
+// Export an instance of RedisClient as the default export
+const redisClient = new RedisClient();
+export default redisClient;
