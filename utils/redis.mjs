@@ -2,47 +2,50 @@ import { createClient } from 'redis';
 
 class RedisClient {
   constructor() {
-    this.client = createClient(); // Automatically connects to Redis
+    this.client = createClient();
     this.isConnected = false;
 
-    // Error handling
+
     this.client.on('error', (err) => {
       console.error('Redis Client Error:', err);
     });
 
-    // Check connection
+
     this.client.on('connect', () => {
       this.isConnected = true;
     });
   }
 
-  // Check if Redis connection is alive
+
   isAlive() {
     return this.isConnected;
   }
 
-  // Get a value from Redis by key
   async get(key) {
     try {
-      return await this.client.get(key);  // Async get value
+      const value = await this.client.get(key);
+      if (value === null) {
+        return null;
+      }
+      return value;
     } catch (err) {
       console.error('Redis GET Error:', err);
       return null;
     }
   }
 
-  // Set a value in Redis with expiration
+
   async set(key, value, duration) {
     try {
       await this.client.set(key, value, {
-        EX: duration,  // Expiration time in seconds
+        EX: duration,
       });
     } catch (err) {
       console.error('Redis SET Error:', err);
     }
   }
 
-  // Delete a key from Redis
+
   async del(key) {
     try {
       await this.client.del(key);
@@ -52,6 +55,6 @@ class RedisClient {
   }
 }
 
-// Export the instance of RedisClient
+
 const redisClient = new RedisClient();
 export default redisClient;
