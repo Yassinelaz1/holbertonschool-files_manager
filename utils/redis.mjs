@@ -24,10 +24,10 @@ class RedisClient {
   async get(key) {
     try {
       const value = await this.client.get(key); // Async get value
-      if (value === null) {  // Explicitly check if value is null
-        return null;  // Return null if the key doesn't exist in Redis
+      if (value === null) {
+        return null; // Explicitly return null when key does not exist
       }
-      return value;
+      return value; // Return the value if the key exists
     } catch (err) {
       console.error('Redis GET Error:', err);
       return null;  // Return null if there is an error
