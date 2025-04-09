@@ -2,7 +2,7 @@ import { createClient } from 'redis';
 
 class RedisClient {
   constructor() {
-    this.client = createClient(); // Creates the client instance
+    this.client = createClient(); // Automatically connects to Redis
     this.isConnected = false;
 
     // Error handling
@@ -14,9 +14,6 @@ class RedisClient {
     this.client.on('connect', () => {
       this.isConnected = true;
     });
-
-    // Connect to Redis (for redis@4.x)
-    this.client.connect();
   }
 
   // Check if Redis connection is alive
@@ -34,7 +31,7 @@ class RedisClient {
     }
   }
 
-  // Set a value in Redis with expiry
+  // Set a value in Redis with expiration
   async set(key, value, duration) {
     try {
       await this.client.set(key, value, {
@@ -55,6 +52,6 @@ class RedisClient {
   }
 }
 
-// Export an instance of RedisClient as the default export
+// Export the instance of RedisClient
 const redisClient = new RedisClient();
 export default redisClient;
