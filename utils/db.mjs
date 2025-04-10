@@ -1,4 +1,4 @@
-import { MongoClient } from 'mongodb';
+const { MongoClient } = require('mongodb');
 
 const host =  process.env.DB_HOST || 'localhost';
 const port = process.env.DB_HOST || 27017;
@@ -15,9 +15,10 @@ class DBClient{
             }
           });
         }
-    isAlive() {
-        return !!this.db;
-      }
+        isAlive() {
+            if (this.db) return true;
+            return false;
+          }
     
       async nbUsers() {
         try {
