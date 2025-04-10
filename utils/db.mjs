@@ -1,4 +1,5 @@
-import { MongoClient } from 'mongodb';
+import pkg from 'mongodb';
+const { MongoClient } = pkg;
 
 const host = process.env.DB_HOST || 'localhost';
 const port = process.env.DB_PORT || 27017;
@@ -7,11 +8,14 @@ const url = `mongodb://${host}:${port}`;
 
 class DBClient {
   constructor() {
-    MongoClient.connect(url, (err, client) => {
+    this.db = null;
+
+    MongoClient.connect(url, { useUnifiedTopology: true }, (err, client) => {
       if (!err) {
         this.db = client.db(database);
       } else {
-        this.db = false;
+        this.db = null;
+        console.error('MongoDB connection error:', err);
       }
     });
   }
