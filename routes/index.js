@@ -1,3 +1,4 @@
+import AuthController from '../controllers/AuthController';
 import AppController from '../controllers/AppController';
 import UsersController from '../controllers/UsersController';
 
