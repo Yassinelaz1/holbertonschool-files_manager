@@ -1,7 +1,6 @@
 import AppController from '../controllers/AppController';
 import UsersController from '../controllers/UsersController';
 
-
 const express = require('express');
 
 const router = (app) => {
@@ -14,5 +13,4 @@ const router = (app) => {
   paths.post('/users', ((request, response) => UsersController.postNew(request, response)));
 
 };
-
 export default router;
