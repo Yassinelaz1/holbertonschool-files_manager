@@ -156,34 +156,51 @@ class FilesController {
     return response.send(filesArray);
   }
 
-  static async putPublish(request, response) {
+  static async getIndex(request, response) {
     const token = request.header('X-Token') || null;
     if (!token) return response.status(401).send({ error: 'Unauthorized' });
-
+  
     const redisToken = await RedisClient.get(`auth_${token}`);
     if (!redisToken) return response.status(401).send({ error: 'Unauthorized' });
-
+  
     const user = await DBClient.db.collection('users').findOne({ _id: ObjectId(redisToken) });
     if (!user) return response.status(401).send({ error: 'Unauthorized' });
-
-    const idFile = request.params.id || '';
-
-    let fileDocument = await DBClient.db.collection('files').findOne({ _id: ObjectId(idFile), userId: user._id });
-    if (!fileDocument) return response.status(404).send({ error: 'Not found' });
-
-    await DBClient.db.collection('files').update({ _id: ObjectId(idFile) }, { $set: { isPublic: true } });
-    fileDocument = await DBClient.db.collection('files').findOne({ _id: ObjectId(idFile), userId: user._id });
-
-    return response.send({
-      id: fileDocument._id,
-      userId: fileDocument.userId,
-      name: fileDocument.name,
-      type: fileDocument.type,
-      isPublic: fileDocument.isPublic,
-      parentId: fileDocument.parentId,
-    });
+  
+    const parentId = request.query.parentId || '0';
+    const page = parseInt(request.query.page, 10) || 0;
+    const skip = page * 20;
+  
+    const matchQuery = { userId: user._id };
+    if (parentId !== '0') {
+      try {
+        matchQuery.parentId = ObjectId(parentId);
+      } catch (e) {
+        return response.status(200).send([]); // Gracefully return empty array if parentId is invalid
+      }
+    } else {
+      matchQuery.parentId = '0';
+    }
+  
+    const files = await DBClient.db
+      .collection('files')
+      .aggregate([
+        { $match: matchQuery },
+        { $skip: skip },
+        { $limit: 20 },
+      ])
+      .toArray();
+  
+    const result = files.map((item) => ({
+      id: item._id,
+      userId: item.userId,
+      name: item.name,
+      type: item.type,
+      isPublic: item.isPublic,
+      parentId: item.parentId,
+    }));
+  
+    return response.status(200).send(result);
   }
-
   static async putUnpublish(request, response) {
     const token = request.header('X-Token') || null;
     if (!token) return response.status(401).send({ error: 'Unauthorized' });
