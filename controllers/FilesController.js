@@ -137,12 +137,12 @@ class FilesController {
       try {
         matchQuery.parentId = ObjectId(parentId);
       } catch (e) {
-        return response.status(200).send([]); // Gracefully return empty array if parentId is invalid
+        return response.status(200).send([]);
       }
     } else {
       matchQuery.parentId = '0';
     }
-  
+
     const files = await DBClient.db
       .collection('files')
       .aggregate([
@@ -163,6 +163,7 @@ class FilesController {
 
     return response.status(200).send(result);
   }
+
   static async putUnpublish(request, response) {
     const token = request.header('X-Token') || null;
     if (!token) return response.status(401).send({ error: 'Unauthorized' });
