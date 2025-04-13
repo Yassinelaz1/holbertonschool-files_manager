@@ -9,12 +9,23 @@ const router = (app) => {
   app.use(express.json());
   app.use('/', paths);
 
-  paths.get('/status', ((request, response) => AppController.getStatus(request, response)));
-  paths.get('/stats', ((request, response) => AppController.getStats(request, response)));
-  paths.post('/users', ((request, response) => UsersController.postNew(request, response)));
-  paths.get('/connect', ((request, response) => AuthController.getConnect(request, response)));
-  paths.get('/disconnect', ((request, response) => AuthController.getDisconnect(request, response)));
-  paths.get('/users/me', ((request, response) => UsersController.getMe(request, response)));
+  paths.get('/status', ((req, resp) =>
+     AppController.getStatus(req, resp)));
+
+  paths.get('/stats', ((req, resp) => 
+    AppController.getStats(req, resp)));
+
+  paths.post('/users', ((req, resp) => 
+    UsersController.postNew(req, resp)));
+
+  paths.get('/connect', ((req, resp) => 
+    AuthController.getConnect(req, resp)));
+
+  paths.get('/disconnect', ((req, resp) => 
+    AuthController.getDisconnect(req, resp)));
+
+  paths.get('/users/me', ((req, resp) => 
+    UsersController.getMe(req, resp)));
 };
 
 export default router;
